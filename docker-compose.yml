@@ -1,0 +1,14 @@
+version: '3'
+services:
+  ansible-controller:
+    container_name: ansible-controller
+    build:
+      context: .
+      dockerfile: Dockerfile
+      
+    image: xdeama/ansible-controller:v0.1
+    volumes:
+      - ./ssh-keys:/root/.ssh
+      - ./ansible:/ansible
+    tty: true
+    stdin_open: true

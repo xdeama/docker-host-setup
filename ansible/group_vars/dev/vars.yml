@@ -1,0 +1,8 @@
+---
+ansible_user: root
+ansible_become_pass: "{{ vault_ansible_become_pass }}"
+group_grafana_cloud_api_key: "{{ vault_grafana_cloud_api_key }}"
+group_loki_username: 
+group_loki_url: https://logs-prod-012.grafana.net/loki/api/v1/push
+group_prometheus_username: 
+group_prometheus_url: https://prometheus-prod-24-prod-eu-west-2.grafana.net/api/prom/push
