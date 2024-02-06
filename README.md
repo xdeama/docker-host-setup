@@ -1,4 +1,4 @@
-# Automated Installation for Linux Docker Host
+# Automated Installation for Ubuntu Linux Docker Host
 Automate intalling and configuring Docker and Grafana Agent on a remote Ubuntu server. Configure Grafana Agent to export logs and metrics to Grafana Cloud.
 
 **This project is a showcase for setting up development environments and comes without any warranty. Use for production is not supported. Thorough testing and hardening for production usage is YOUR responsibility.**
