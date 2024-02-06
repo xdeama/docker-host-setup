@@ -162,4 +162,4 @@ cython_debug/
 # Ansible
 vault.yml
 /ssh-keys
-
+/logs

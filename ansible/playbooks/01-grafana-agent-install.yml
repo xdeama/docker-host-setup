@@ -9,7 +9,9 @@
     prometheus_url: "{{ group_prometheus_url }}"
     loki_url: "{{ group_loki_url }}"
     grafana_agent_version: '0.39.2'
-    grafana_agent_user_groups:
+    #grafana_agent_user_groups:
+    grafana_agent_mode: static
+
   tasks:
     - name: Install Grafana Agent
       ansible.builtin.include_role:
@@ -26,6 +28,8 @@
 
           global:
             scrape_interval: 60s
+            external_labels:
+              hostname: ${HOSTNAME:-default}
           wal_directory: /tmp/grafana-agent-wal
         grafana_agent_logs_config:
           configs:
@@ -45,6 +49,7 @@
                     - targets: [localhost]
                       labels:
                         instance: ${HOSTNAME:-default}
+                        hostname: ${HOSTNAME:-default}
                         job: varlogs
                         __path__: /var/log/*log
         grafana_agent_integrations_config:

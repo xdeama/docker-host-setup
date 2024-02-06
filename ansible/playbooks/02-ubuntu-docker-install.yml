@@ -61,6 +61,18 @@
         - docker-buildx-plugin
         - docker-compose-plugin
 
+    # - name: Install pip3
+    #   ansible.builtin.package:
+    #     name: python3-pip
+    #     state: present
+
+    # - name: Install Docker SDK for Python
+    #   ansible.builtin.pip:
+    #     name:
+    #       - docker
+    #       - docker-compose
+    #     state: present
+
     - name: Add Docker group
       ansible.builtin.group:
         name: docker
@@ -80,3 +92,5 @@
       loop:
         - docker.service
         - containerd.service
+
+  
