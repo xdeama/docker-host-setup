@@ -160,6 +160,8 @@ cython_debug/
 #.idea/
 
 # Ansible
-vault.yml
 /ssh-keys
 /logs
+/group_vars/dev/
+vault.yml
+vars.yml
