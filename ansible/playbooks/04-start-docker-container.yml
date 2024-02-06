@@ -1,0 +1,39 @@
+---
+- name: Install Docker on Ubuntu
+  hosts: all
+  become: true
+  vars:
+    arch_mapping:
+      x86_64: amd64
+      aarch64: arm64
+
+  tasks:
+    - name: Create directory if it doesn't exist
+      ansible.builtin.file:
+        path: /etc/docker-compose/dummy/
+        state: directory
+
+    - name: Copy docker-compose.yml
+      copy:
+        src: ../remote-host-config/docker-compose.yml 
+        dest: /etc/docker-compose/dummy/docker-compose.yml
+
+    # - name: Clone Docker Compose Repository
+    #   git:
+    #     repo: https://github.com/sqlite/sqlite.git
+    #     dest: /etc/docker-compose/project
+    #     clone: yes
+    #     update: yes
+
+    # - name: Ensure Docker Compose file is present
+    #   ansible.builtin.file:
+    #     path: /etc/docker-compose/project/docker-compose.yml
+    #     state: file
+
+    - name: Run docker-compose
+      community.general.docker_compose:
+        project_src: /etc/docker-compose/dummy
+        state: present
+
+    - name: Run docker-compose
+      shell: docker compose -f /etc/docker-compose/dummy/docker-compose.yml up -d
