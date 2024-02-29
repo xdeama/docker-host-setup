@@ -52,6 +52,24 @@
                         hostname: ${HOSTNAME:-default}
                         job: varlogs
                         __path__: /var/log/*log
+                - job_name: integrations/docker
+                  docker_sd_configs:
+                    - host: unix:///var/run/docker.sock
+                      refresh_interval: 5s
+                  relabel_configs:
+                    - action: replace
+                      replacement: integrations/docker
+                      target_label: job
+                    - action: replace
+                      replacement: ${HOSTNAME:-default}
+                      target_label: instance
+                    - source_labels:
+                        - __meta_docker_container_name
+                      regex: '/(.*)'
+                      target_label: container
+                    - source_labels:
+                        - __meta_docker_container_log_stream
+                      target_label: stream
         grafana_agent_integrations_config:
           node_exporter:
             enabled: true
@@ -61,5 +79,18 @@
                 password: '{{ grafana_cloud_api_key }}'
                 username: '{{ metrics_username }}'
               url: '{{ prometheus_url }}'
+          cadvisor:
+            enabled: true
+            docker_only: true
+            instance: ${HOSTNAME:-default}
+            relabel_configs:
+              - action: replace
+                replacement: integrations/docker
+                target_label: job
+            metric_relabel_configs:
+              - action: keep
+                regex: container_cpu_usage_seconds_total|container_fs_inodes_free|container_fs_inodes_total|container_fs_limit_bytes|container_fs_usage_bytes|container_last_seen|container_memory_usage_bytes|container_network_receive_bytes_total|container_network_tcp_usage_total|container_network_transmit_bytes_total|container_spec_memory_reservation_limit_bytes|machine_memory_bytes|machine_scrape_error
+                source_labels:
+                  - __name__
         grafana_agent_env_vars:
           HOSTNAME: '%H'

@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
       
-    image: xdeama/ansible-controller:v0.1
+    image: xdeama/ansible-controller:v0.2
     volumes:
       - ./ssh-keys:/root/.ssh
       - ./ansible:/ansible

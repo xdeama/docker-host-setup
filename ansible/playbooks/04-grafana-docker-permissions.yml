@@ -1,0 +1,32 @@
+---
+- name: Install Docker on Ubuntu
+  hosts: all
+  become: true
+  vars:
+
+  tasks:
+    - name: Add 'grafana-agent' user to 'docker' group
+      ansible.builtin.user:
+        name: grafana-agent
+        groups: docker
+        append: yes
+
+    - name: Edit grafana-agent service to run as root
+      ansible.builtin.lineinfile:
+        path: /lib/systemd/system/grafana-agent.service
+        regexp: '^User=grafana-agent'
+        line: 'User=root'
+        state: present
+      notify:
+        - reload systemctl
+        - restart grafana-agent
+
+  handlers:
+    - name: reload systemctl
+      ansible.builtin.systemd:
+        daemon_reload: yes
+
+    - name: restart grafana-agent
+      ansible.builtin.service:
+        name: grafana-agent
+        state: restarted

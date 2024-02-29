@@ -89,7 +89,7 @@ docker compose build
 ```
 OR
 ```bash
-docker build -t xdeama/ansible-controllerv:v0.1 .
+docker build -t xdeama/ansible-controllerv:v0.2 .
 ```
 
 ## Check Grafana-Agent service on target host
