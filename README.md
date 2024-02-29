@@ -96,3 +96,8 @@ docker build -t xdeama/ansible-controllerv:v0.2 .
 ```bash
 sudo systemctl status grafana-agent.service
 ```
+
+or check the logs since last boot:
+```bash
+sudo journalctl -u grafana-agent.service -b
+```

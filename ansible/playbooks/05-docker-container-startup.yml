@@ -1,39 +1,42 @@
 ---
-- name: Install Docker on Ubuntu
+- name: Clone Docker configuration repository and start container
   hosts: all
   become: true
   vars:
-    arch_mapping:
-      x86_64: amd64
-      aarch64: arm64
+    git_project_url: https://github.com/xdeama/docker-host-setup.git
+    docker_compose_basepath: /etc/docker-compose/
+    docker_compose_project: docker-host-setup
+    docker_compose_subfolder: /example-remote-host-config
+    # Your docker-compose.yml is in <git_project_url><docker_compose_subfolder>
+    # and will be cloned to <docker_compose_basepath><docker_compose_project>
+    # , so your docker-compose.yml will in the target machine path
+    # <docker_compose_basepath><docker_compose_project><docker_compose_subfolder>/docker-compose.yml
 
   tasks:
-    - name: Create directory if it doesn't exist
+    - name: Stop docker-compose
+      community.general.docker_compose:
+        project_src: '{{ docker_compose_basepath }}{{ docker_compose_project }}{{ docker_compose_subfolder }}'
+        state: absent
+      ignore_errors: true
+
+    - name: Create directory '{{ docker_compose_basepath }}{{ docker_compose_project }}' if it doesn't exist
       ansible.builtin.file:
-        path: /etc/docker-compose/dummy/
+        path: '{{ docker_compose_basepath }}{{ docker_compose_project }}'
         state: directory
 
-    - name: Copy docker-compose.yml
-      copy:
-        src: ../remote-host-config/docker-compose.yml 
-        dest: /etc/docker-compose/dummy/docker-compose.yml
+    - name: Git clone '{{ git_project_url }}', your Docker compose repository
+      git:
+        repo: '{{ git_project_url }}'
+        dest: '{{ docker_compose_basepath }}{{ docker_compose_project }}'
+        clone: yes
+        update: yes
 
-    # - name: Clone Docker Compose Repository
-    #   git:
-    #     repo: https://github.com/sqlite/sqlite.git
-    #     dest: /etc/docker-compose/project
-    #     clone: yes
-    #     update: yes
-
-    # - name: Ensure Docker Compose file is present
-    #   ansible.builtin.file:
-    #     path: /etc/docker-compose/project/docker-compose.yml
-    #     state: file
+    - name: Ensure Docker Compose file is present
+      ansible.builtin.file:
+        path: '{{ docker_compose_basepath }}{{ docker_compose_project }}{{ docker_compose_subfolder }}/docker-compose.yml'
+        state: file
 
     - name: Run docker-compose
       community.general.docker_compose:
-        project_src: /etc/docker-compose/dummy
+        project_src: '{{ docker_compose_basepath }}{{ docker_compose_project }}{{ docker_compose_subfolder }}'
         state: present
-
-    - name: Run docker-compose
-      shell: docker compose -f /etc/docker-compose/dummy/docker-compose.yml up -d
