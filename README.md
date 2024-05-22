@@ -12,7 +12,7 @@ Automate intalling and configuring Docker and Grafana Agent on a remote Ubuntu s
 6. Playbooks are checking out a Git Repository with your personal docker-compose configuration and executes docker compose up
 7. Playbook execution logs are saved to ./logs
 
-Playbook execution is currently manual, since container and host ssh config are separated. The Container is in the long run meant to be executed by a CI/CD pipeline and acquire all it's credentials from a Ansible Vault or comparable secret store.
+Playbook execution is currently manual, since container and host ssh config are separated. The Container is in the long run meant to be executed by a CI/CD pipeline and acquire all credentials from a Ansible Vault or comparable secret store.
 
 Scripts we're created on a M1 Mac, configured to be both runnable on ARM and AMD, but not tested. Target host may also be ARM or AMD.
 
